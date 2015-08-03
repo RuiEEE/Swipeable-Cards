@@ -483,4 +483,73 @@ public class CardContainer extends AdapterView<ListAdapter> {
                 return false;
         }
     }
+
+    public void dislike(){
+
+        final View topCard = mTopCard;
+
+        mTopCard = getChildAt(getChildCount() - 2);
+        CardModel cardModel = (CardModel)getAdapter().getItem(0);
+
+        if(mTopCard != null)
+            mTopCard.setLayerType(LAYER_TYPE_HARDWARE, null);
+
+        topCard.animate()
+                .setDuration(500)
+                .alpha(.75f)
+                .setInterpolator(new LinearInterpolator())
+                .x(-topCard.getWidth())
+                .y(topCard.getY())
+                .rotation(-45)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        removeViewInLayout(topCard);
+                        ensureFull();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+                });
+
+        if(cardModel.getOnCardDimissedListener() != null){
+            cardModel.getOnCardDimissedListener().onDislike();
+        }
+    }
+
+    public void like(){
+        final View topCard = mTopCard;
+
+        mTopCard = getChildAt(getChildCount() - 2);
+        CardModel cardModel = (CardModel)getAdapter().getItem(0);
+
+        if(mTopCard != null)
+            mTopCard.setLayerType(LAYER_TYPE_HARDWARE, null);
+
+        topCard.animate()
+                .setDuration(500)
+                .alpha(.75f)
+                .setInterpolator(new LinearInterpolator())
+                .x(topCard.getWidth())
+                .y(topCard.getY())
+                .rotation(45)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        removeViewInLayout(topCard);
+                        ensureFull();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+                });
+
+        if(cardModel.getOnCardDimissedListener() != null){
+            cardModel.getOnCardDimissedListener().onLike();
+        }
+    }
 }
